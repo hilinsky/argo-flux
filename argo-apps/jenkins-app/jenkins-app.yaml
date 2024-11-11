@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: hilinsky
+  name: jenkins
   namespace: argocd
 spec:
   destination:
