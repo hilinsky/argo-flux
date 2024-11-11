@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+data:
+  name: Yml0bmFtaS5rOHMuaGVsbQ==
+  project: ZGVmYXVsdA==
+  type: aGVsbQ==
+  url: aHR0cHM6Ly9jaGFydHMuYml0bmFtaS5jb20vYml0bmFtaQ==
+kind: Secret
+metadata:
+  name: repo-bitnami
+  namespace: argocd
+type: Opaque

@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+data:
+  name: aGlsaW5za3kuazhzLmhlbG0=
+  project: ZGVmYXVsdA==
+  type: aGVsbQ==
+  url: aHR0cHM6Ly9oaWxpbnNreS5naXRodWIuaW8vazhzLWhlbG0v
+kind: Secret
+metadata:
+  name: repo-hilinsky
+  namespace: argocd
+type: Opaque
