@@ -48,13 +48,13 @@ data:
     - name: CPU overload alert
       rules:
       - alert: PodHighCpuUsage
-        expr: (sum(rate(container_cpu_usage_seconds_total{container!=""}[5m])) by (pod, container) / sum(container_spec_cpu_quota{container!=""}/container_spec_cpu_period{container!=""}) by (pod, container) * 100) > 10
+        expr: (sum(rate(container_cpu_usage_seconds_total{container!=""}[3m])) by (pod, container) / sum(container_spec_cpu_quota{container!=""}/container_spec_cpu_period{container!=""}) by (pod, container) * 100) > 5
         for: 1m
         labels:
           severity: slack
         annotations:
           summary: Container High CPU utilization (instance {{ $labels.instance }})
-          description: "Container CPU utilization is above 10%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+          description: "Container CPU utilization is above 5%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
   prometheus.yml: |-
     global:
       scrape_interval: 5s
@@ -66,7 +66,7 @@ data:
       - scheme: http
         static_configs:
         - targets:
-          - "alertmanager.monitoring.svc:9093"
+          - "alertmanager-service:8080"
 
     scrape_configs:
       - job_name: 'node-exporter'
