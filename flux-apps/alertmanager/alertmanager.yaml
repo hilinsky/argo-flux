@@ -1,29 +1,4 @@
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: alertmanager-config
-  namespace: monitoring
-data:
-  config.yml: |
-    global:
-      slack_api_url: "https://hooks.slack.com/services/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"
-    route:
-      receiver: 'slack-notifications'
-      group_by: [alertname, datacenter, app]
-    receivers:
-    - name: 'slack-notifications'
-      slack_configs:
-      - channel: '#alerts'
-        title: "{{ .CommonLabels.alertname }} - {{ .Status }}"
-        text: |
-          {{ range .Alerts }}
-            *Alert:* {{ .Annotations.summary }}
-            *Description:* {{ .Annotations.description }}
-            *Severity:* {{ .Labels.severity }}
-            *Source:* {{ .GeneratorURL }}
-          {{ end }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -51,13 +26,14 @@ spec:
           containerPort: 9093
         volumeMounts:
         - name: config-volume
-          mountPath: /etc/alertmanager
+          mountPath: "/etc/alertmanager/"
+          readOnly: true
         - name: alertmanager
           mountPath: /alertmanager
       volumes:
       - name: config-volume
-        configMap:
-          name: alertmanager-config
+        secret:
+          secretName: secret-alert-config
       - name: alertmanager
         emptyDir: {}
 ---
