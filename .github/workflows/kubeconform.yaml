@@ -45,7 +45,7 @@ jobs:
       env:
         SLACK_CHANNEL: all-slack
         SLACK_COLOR: ${{ job.status }}
-        SLACK_MESSAGE: "needs.kubeconform.outputs.CHECK_OUTPUT"
+        SLACK_MESSAGE: ${{ needs.kubeconform.outputs.CHECK_OUTPUT }}
         SLACK_TITLE: Kubeconform Check
         SLACK_USERNAME: GitHub
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
