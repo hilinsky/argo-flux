@@ -3,6 +3,7 @@ kind: Pod
   containers:
   - name: alpine
     image: alpine:3.12
+      CHECK_OUTPUT
     command:
         - sleep
         - "1"
