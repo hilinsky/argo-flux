@@ -10,5 +10,5 @@ spec:
     image: alpine:3.12
     command:
         - sleep
-        - "3600"
+        - "36000"
     imagePullPolicy: IfNotPresent
