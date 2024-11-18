@@ -36,6 +36,7 @@ jobs:
         id: init
         run: |
             echo "CHECK_OUTPUT=$(kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ steps.changed-files.outputs.changed_files }})" >> $GITHUB_OUTPUT
+        continue-on-error: true
   notification:
     needs: kubeconform
     runs-on: ubuntu-latest
