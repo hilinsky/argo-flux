@@ -11,6 +11,8 @@ jobs:
   kubeconform:
     name: Test using kubeconform
     runs-on: ubuntu-latest
+    outputs:
+      CHECK_OUTPUT: ${{ steps.init.outputs.CHECK_OUTPUT }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -31,9 +33,9 @@ jobs:
       - name: Set up Kubeconform
         uses: bmuschko/setup-kubeconform@v1
       - name: Validate manifests
+        id: init
         run: |
-            CHECK_OUTPUT=$(kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ steps.changed-files.outputs.changed_files }})
-            echo $CHECK_OUTPUT >> $GITHUB_OUTPUT
+            echo "CHECK_OUTPUT=$(kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ steps.changed-files.outputs.changed_files }})" >> $GITHUB_OUTPUT
   notification:
     needs: kubeconform
     runs-on: ubuntu-latest
