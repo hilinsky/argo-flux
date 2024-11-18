@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Pod
-  containers:
-    command:
-        - sleep
-        - "3600"
-    imagePullPolicy: IfNotPresent
