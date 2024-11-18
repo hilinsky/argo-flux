@@ -32,4 +32,18 @@ jobs:
         uses: bmuschko/setup-kubeconform@v1
       - name: Validate manifests
         run: |
-            kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ steps.changed-files.outputs.changed_files }}
+            CHECK_OUTPUT=$(kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ steps.changed-files.outputs.changed_files }})
+            echo $CHECK_OUTPUT >> $GITHUB_OUTPUT
+  notification:
+    needs: kubeconform
+    runs-on: ubuntu-latest
+    steps:
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: all-slack
+        SLACK_COLOR: ${{ job.status }}
+        SLACK_MESSAGE: "needs.kubeconform.outputs.CHECK_OUTPUT"
+        SLACK_TITLE: Kubeconform Check
+        SLACK_USERNAME: GitHub
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
