@@ -37,10 +37,10 @@ jobs:
         run: |
             CHECK_OUTPUT=""
             for line in $(kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' ${{ steps.changed-files.outputs.changed_files }}); do
-              echo "$line"
               CHECK_OUTPUT="${CHECK_OUTPUT} $line"
             done
             echo "::set-output name=CHECK_OUTPUT::$CHECK_OUTPUT"
+            echo $CHECK_OUTPUT
   notification:
     needs: kubeconform
     runs-on: ubuntu-latest
