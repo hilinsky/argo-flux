@@ -28,3 +28,10 @@ jobs:
             for file in ${{ steps.changed-files.outputs.changed_files }}; do
                 echo "$file was changed"
             done
+      - name: Set up Kubeconform
+        uses: bmuschko/setup-kubeconform@v1
+      - name: Validate manifests
+        run: |
+            for file in ${{ steps.changed-files.outputs.changed_files }}; do
+                kubeconform -schema-location default --summary -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' $file
+            done
