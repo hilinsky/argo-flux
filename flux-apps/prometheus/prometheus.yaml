@@ -45,6 +45,26 @@ metadata:
 data:
   prometheus.rules: |-
     groups:
+    - name: CPU overload alert WordPress
+      rules:
+      - alert: PodHighCpuUsage
+        expr: (sum(rate(container_cpu_usage_seconds_total{container="wordpress"}[3m])) by (pod, container) / sum(container_spec_cpu_quota{container="wordpress"}/container_spec_cpu_period{container="wordpress"}) by (pod, container) * 100) > 1
+        for: 1m
+        labels:
+          severity: slack
+        annotations:
+          summary: Container High CPU utilization (instance {{ $labels.instance }})
+          description: "Container CPU utilization is above 1%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+    - name: RAM overload alert WordPress
+      rules:
+      - alert: PodHighRAMUsage
+        expr: sum(container_memory_working_set_bytes{container="wordpress"}) / sum(kube_pod_container_resource_limits{container="wordpress"}) * 100 > 1
+        for: 1m
+        labels:
+          severity: slack
+        annotations:
+          summary: Container High RAM utilization (instance {{ $labels.instance }})
+          description: "Container RAM utilization is above 1%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
     - name: CPU overload alert
       rules:
       - alert: PodHighCpuUsage
