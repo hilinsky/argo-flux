@@ -47,7 +47,7 @@ data:
     groups:
     - name: CPU overload alert WordPress
       rules:
-      - alert: PodHighCpuUsage
+      - alert: PodHighCpuUsageWordpress
         expr: (sum(rate(container_cpu_usage_seconds_total{container="wordpress"}[3m])) by (pod, container) / sum(container_spec_cpu_quota{container="wordpress"}/container_spec_cpu_period{container="wordpress"}) by (pod, container) * 100) > 1
         for: 1m
         labels:
@@ -57,7 +57,7 @@ data:
           description: "Container CPU utilization is above 1%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
     - name: RAM overload alert WordPress
       rules:
-      - alert: PodHighRAMUsage
+      - alert: PodHighRAMUsageWordpress
         expr: sum(container_memory_working_set_bytes{container="wordpress"}) / sum(kube_pod_container_resource_limits{container="wordpress"}) * 100 > 1
         for: 1m
         labels:
@@ -65,16 +65,6 @@ data:
         annotations:
           summary: Container High RAM utilization (instance {{ $labels.instance }})
           description: "Container RAM utilization is above 1%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-    - name: CPU overload alert
-      rules:
-      - alert: PodHighCpuUsage
-        expr: (sum(rate(container_cpu_usage_seconds_total{container!=""}[3m])) by (pod, container) / sum(container_spec_cpu_quota{container!=""}/container_spec_cpu_period{container!=""}) by (pod, container) * 100) > 5
-        for: 1m
-        labels:
-          severity: slack
-        annotations:
-          summary: Container High CPU utilization (instance {{ $labels.instance }})
-          description: "Container CPU utilization is above 5%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
   prometheus.yml: |-
     global:
       scrape_interval: 5s
